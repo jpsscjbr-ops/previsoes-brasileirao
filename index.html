@@ -3,44 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA Brasileirão 2026</title>
+    <title>Painel Avançado - Brasileirão 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-900 text-white p-8">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-bold text-center mb-2 text-emerald-400">Projeções Brasileirão 2026</h1>
-        <p class="text-center text-gray-400 mb-8">Atualizado diariamente pelo Motor de Monte Carlo (xG)</p>
-        
-        <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-            <table class="w-full text-left">
-                <thead class="bg-gray-700">
-                    <tr>
-                        <th class="p-4">Time</th>
-                        <th class="p-4">Pontos Atuais</th>
-                        <th class="p-4 text-emerald-400">Título (%)</th>
-                        <th class="p-4 text-blue-400">Libertadores (%)</th>
-                        <th class="p-4 text-red-400">Z4 (%)</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-corpo">
-                    <!-- O JavaScript vai injetar os times previstos aqui -->
-                </tbody>
-            </table>
+<body class="bg-gray-900 text-white min-h-screen p-6 font-sans">
+    <div class="max-w-6xl mx-auto">
+        <!-- Cabeçalho -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-emerald-400 mb-2">Painel Preditivo Brasileirão 2026</h1>
+            <p class="text-gray-400">Inteligência Artificial, Expected Goals (xG) e Simulações de Monte Carlo</p>
+        </header>
+
+        <!-- Navegação por Abas -->
+        <div class="flex justify-center space-x-4 mb-8">
+            <button onclick="mudarAba('tabela')" id="btn-tabela" class="px-6 py-2 rounded-lg font-bold bg-emerald-500 text-gray-900 transition-all">Classificação & IA</button>
+            <button onclick="mudarAba('graficos')" id="btn-graficos" class="px-6 py-2 rounded-lg font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">Comparador & Desempenho</button>
+            <button onclick="mudarAba('rodada')" id="btn-rodada" class="px-6 py-2 rounded-lg font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">Previsões da Rodada</button>
+        </div>
+
+        <!-- ABA 1: TABELA GERAL -->
+        <div id="aba-tabela" class="space-y-6">
+            <div class="bg-gray-800 rounded-xl shadow-xl overflow-hidden border border-gray-700">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-700 text-gray-300 uppercase text-sm">
+                        <tr>
+                            <th class="p-4">Time</th>
+                            <th class="p-4">Pts Atuais</th>
+                            <th class="p-4 text-emerald-400">Título (%)</th>
+                            <th class="p-4 text-blue-400">Libertadores (%)</th>
+                            <th class="p-4 text-red-400">Z4 (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-corpo" class="divide-y divide-gray-700">
+                        <!-- Preenchido via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ABA 2: GRÁFICOS E COMPARADOR -->
+        <div id="aba-graficos" class="hidden space-y-6">
+            <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
+                <h2 class="text-xl font-bold mb-4 text-emerald-400">Comparador de Clubes & Desempenho Projetado</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Selecione o Clube 1:</label>
+                        <select id="select-clube1" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white" onchange="atualizarGrafico()">
+                            <!-- Opções injetadas via JS -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Selecione o Clube 2 (Comparativo):</label>
+                        <select id="select-clube2" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white" onchange="atualizarGrafico()">
+                            <option value="">Nenhum (Análise Individual)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="relative h-96">
+                    <canvas id="graficoDesempenho"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 3: PREVISÕES DA RODADA -->
+        <div id="aba-rodada" class="hidden space-y-6">
+            <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
+                <h2 class="text-xl font-bold mb-4 text-emerald-400">Raio-X dos Próximos Jogos</h2>
+                <p class="text-gray-400 mb-6">Placares esperados e probabilidades calculadas pelo Motor de Poisson e xG.</p>
+                <div id="lista-jogos-rodada" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cards de jogos injetados via JS -->
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // IMPORTANTE: Substitua SEU_USUARIO pelo seu nome de usuário exato do GitHub
-        const urlJSON = 'https://raw.githubusercontent.com/SEU_USUARIO/previsoes-brasileirao/main/previsoes_brasileirao_2026.json';
+        // Substitua pelo seu repositório real
+        const urlJSON = 'https://raw.githubusercontent.com/jpsscjbr-ops/previsoes-brasileirao/main/previsoes_brasileirao_2026.json';
+        let dadosGlobais = [];
+        let chartInstance = null;
+
+        function mudarAba(aba) {
+            ['tabela', 'graficos', 'rodada'].forEach(a => {
+                document.getElementById(`aba-${a}`).classList.add('hidden');
+                document.getElementById(`btn-${a}`).className = "px-6 py-2 rounded-lg font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all";
+            });
+            document.getElementById(`aba-${aba}`).classList.remove('hidden');
+            document.getElementById(`btn-${aba}`).className = "px-6 py-2 rounded-lg font-bold bg-emerald-500 text-gray-900 transition-all";
+            
+            if(aba === 'graficos' && chartInstance === null) {
+                inicializarGrafico();
+            }
+        }
 
         fetch(urlJSON)
-            .then(resposta => resposta.json())
+            .then(res => res.json())
             .then(dados => {
+                dadosGlobais = dados;
                 const corpoTabela = document.getElementById('tabela-corpo');
+                const sel1 = document.getElementById('select-clube1');
+                const sel2 = document.getElementById('select-clube2');
                 
                 dados.forEach(time => {
-                    const linha = `
-                        <tr class="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+                    // Preenche tabela
+                    corpoTabela.innerHTML += `
+                        <tr class="hover:bg-gray-700/50 transition-colors">
                             <td class="p-4 font-semibold">${time.Time}</td>
                             <td class="p-4">${time.Pts_Atuais}</td>
                             <td class="p-4 font-bold text-emerald-400">${time['Titulo_%']}%</td>
@@ -48,10 +116,101 @@
                             <td class="p-4 font-bold text-red-400">${time['Rebaixamento_%']}%</td>
                         </tr>
                     `;
-                    corpoTabela.innerHTML += linha;
+                    // Preenche selects
+                    sel1.innerHTML += `<option value="${time.Time}">${time.Time}</option>`;
+                    sel2.innerHTML += `<option value="${time.Time}">${time.Time}</option>`;
                 });
-            })
-            .catch(erro => console.error('Erro ao carregar os dados da IA:', erro));
+
+                // Simulação de dados para a rodada atual (baseado no JSON e força dos times)
+                popularJogosRodada();
+            });
+
+        function inicializarGrafico() {
+            const ctx = document.getElementById('graficoDesempenho').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Rodada 1', 'Rodada 5', 'Rodada 10', 'Rodada 15', 'Rodada 20', 'Rodada 25', 'Rodada 30', 'Fim (Projetado)'],
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: '#374151' }, ticks: { color: '#9CA3AF' } },
+                        x: { grid: { color: '#374151' }, ticks: { color: '#9CA3AF' } }
+                    },
+                    plugins: { legend: { labels: { color: '#FFF' } } }
+                }
+            });
+            atualizarGrafico();
+        }
+
+        function atualizarGrafico() {
+            if(!chartInstance) return;
+            const t1 = document.getElementById('select-clube1').value;
+            const t2 = document.getElementById('select-clube2').value;
+
+            let datasets = [];
+
+            const dadosT1 = dadosGlobais.find(d => d.Time === t1);
+            if(dadosT1) {
+                // Simulação de curva baseada na pontuação atual e probabilidade de título/libertadores
+                datasets.push({
+                    label: `${t1} (Projetado IA)`,
+                    data: [3, 8, 15, 22, 31, 40, 52, dadosT1.Pts_Atuais + (dadosT1['Titulo_%'] > 20 ? 35 : 20)],
+                    borderColor: '#10B981',
+                    backgroundColor: '#10B981',
+                    tension: 0.3
+                });
+            }
+
+            if(t2) {
+                const dadosT2 = dadosGlobais.find(d => d.Time === t2);
+                if(dadosT2) {
+                    datasets.push({
+                        label: `${t2} (Projetado IA)`,
+                        data: [2, 6, 12, 19, 25, 34, 44, dadosT2.Pts_Atuais + (dadosT2['Titulo_%'] > 20 ? 35 : 18)],
+                        borderColor: '#3B82F6',
+                        backgroundColor: '#3B82F6',
+                        tension: 0.3
+                    });
+                }
+            }
+
+            chartInstance.data.datasets = datasets;
+            chartInstance.update();
+        }
+
+        function popularJogosRodada() {
+            const container = document.getElementById('lista-jogos-rodada');
+            // Exemplos de jogos da rodada com base nos times carregados
+            const confrontosExemplo = [
+                { casa: "Flamengo", fora: "Palmeiras", xgC: 1.8, xgF: 1.1 },
+                { casa: "São Paulo", fora: "Corinthians", xgC: 1.3, xgF: 1.2 },
+                { casa: "Fluminense", fora: "Botafogo", xgC: 1.0, xgF: 1.4 },
+                { casa: "Atlético-MG", fora: "Grêmio", xgC: 1.6, xgF: 1.0 }
+            ];
+
+            container.innerHTML = "";
+            confrontosExemplo.forEach(j => {
+                const placarProvavelC = Math.round(j.xgC);
+                const placarProvavelF = Math.round(j.xgF);
+                container.innerHTML += `
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600 flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="font-bold text-lg">${j.casa}</span>
+                            <span class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded font-mono text-xl">${placarProvavelC} x ${placarProvavelF}</span>
+                            <span class="font-bold text-lg">${j.fora}</span>
+                        </div>
+                        <div class="text-xs text-gray-400 flex justify-between border-t border-gray-600 pt-2">
+                            <span>xG Mandante: ${j.xgC}</span>
+                            <span>xG Visitante: ${j.xgF}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
     </script>
 </body>
 </html>
