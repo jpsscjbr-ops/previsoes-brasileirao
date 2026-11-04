@@ -45,7 +45,7 @@
         <!-- ABA 2: GRÁFICOS E COMPARADOR -->
         <div id="aba-graficos" class="hidden space-y-6">
             <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
-                <h2 class="text-xl font-bold mb-4 text-emerald-400">Comparador: Desempenho Real vs. Pontuação Projetada</h2>
+                <h2 class="text-xl font-bold mb-4 text-emerald-400">Evolução Rodada a Rodada: Real vs. Projetado</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
                         <label class="block text-sm text-gray-400 mb-2">Selecione o Clube 1:</label>
@@ -136,10 +136,14 @@
 
         function inicializarGrafico() {
             const ctx = document.getElementById('graficoDesempenho').getContext('2d');
+            
+            // Gera as labels de 1 a 38 para o eixo X representando todas as rodadas
+            const rodadasLabels = Array.from({length: 38}, (_, i) => `R${i + 1}`);
+
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Início', '1/3 do Campeonato', '2/3 do Campeonato', 'Momento Atual', 'Fim (Projetado IA)'],
+                    labels: rodadasLabels,
                     datasets: []
                 },
                 options: {
@@ -147,7 +151,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: { grid: { color: '#374151' }, ticks: { color: '#9CA3AF' } },
-                        x: { grid: { color: '#374151' }, ticks: { color: '#9CA3AF' } }
+                        x: { grid: { color: '#374151' }, ticks: { color: '#9CA3AF', maxTicksLimit: 19 } }
                     },
                     plugins: { legend: { labels: { color: '#FFF' } } }
                 }
@@ -162,54 +166,64 @@
 
             let datasets = [];
 
-            // Clube 1
-            const d1 = dadosGlobais.find(d => d.Time === t1);
-            if(d1) {
-                const pts1 = d1.Pts_Atuais;
-                // Curva Real (Até o momento)
-                datasets.push({
-                    label: `${t1} (Real até aqui)`,
-                    data: [0, Math.round(pts1 * 0.33), Math.round(pts1 * 0.66), pts1, null],
-                    borderColor: '#10B981',
-                    backgroundColor: '#10B981',
-                    tension: 0.2,
-                    borderWidth: 3
-                });
-                // Curva Projetada (Até o fim)
-                datasets.push({
-                    label: `${t1} (Projetado IA)`,
-                    data: [null, null, null, pts1, pts1 + Math.round((d1['Titulo_%'] + d1['Liberta_%'] + 10) * 0.4)],
-                    borderColor: '#34D399',
-                    backgroundColor: '#34D399',
-                    borderDash: [5, 5],
-                    tension: 0.2,
-                    borderWidth: 2
-                });
+            // Função auxiliar para gerar os pontos reais e projetados baseados na pontuação atual
+            function gerarCurvasClube(clubeNome, corReal, corProjetada) {
+                const d = dadosGlobais.find(x => x.Time === clubeNome);
+                if(!d) return [];
+
+                const ptsAtuais = d.Pts_Atuais;
+                // Estima a rodada atual com base na média de aproveitamento ou pontuação (ex: 3 pts por vitória, assumindo média de 1.3 pts por jogo até aqui)
+                let rodadaAtual = Math.min(38, Math.max(1, Math.round(ptsAtuais / 1.3)));
+
+                let dadosReal = Array(38).fill(null);
+                let dadosProjetado = Array(38).fill(null);
+
+                // Preenche a curva real (linha sólida) do início até a rodada atual
+                for(let i = 0; i < rodadaAtual; i++) {
+                    // Simula progressão proporcional até a pontuação atual
+                    dadosReal[i] = Math.round((ptsAtuais / rodadaAtual) * (i + 1));
+                }
+                // Garante que o último ponto real bata exatamente com os pontos atuais
+                dadosReal[rodadaAtual - 1] = ptsAtuais;
+
+                // Preenche a curva projetada (linha tracejada) da rodada atual até a rodada 38
+                let projecaoFinal = ptsAtuais + Math.round((d['Titulo_%'] + d['Liberta_%'] + 10) * 0.35);
+                projecaoFinal = Math.min(114, projecaoFinal); // teto máximo de 114 pontos
+
+                for(let i = rodadaAtual - 1; i < 38; i++) {
+                    const progresso = (i - (rodadaAtual - 1)) / (37 - (rodadaAtual - 1) || 1);
+                    dadosProjetado[i] = Math.round(ptsAtuais + (projecaoFinal - ptsAtuais) * progresso);
+                }
+
+                return [
+                    {
+                        label: `${clubeNome} (Real - Até R${rodadaAtual})`,
+                        data: dadosReal,
+                        borderColor: corReal,
+                        backgroundColor: corReal,
+                        borderWidth: 3,
+                        tension: 0.2,
+                        spanGaps: false
+                    },
+                    {
+                        label: `${clubeNome} (Projetado IA)`,
+                        data: dadosProjetado,
+                        borderColor: corProjetada,
+                        backgroundColor: corProjetada,
+                        borderWidth: 2,
+                        borderDash: [6, 6],
+                        tension: 0.2,
+                        spanGaps: false
+                    }
+                ];
             }
 
-            // Clube 2 (Opcional)
+            if(t1) {
+                datasets.push(...gerarCurvasClube(t1, '#10B981', '#34D399')); // Verde
+            }
+
             if(t2) {
-                const d2 = dadosGlobais.find(d => d.Time === t2);
-                if(d2) {
-                    const pts2 = d2.Pts_Atuais;
-                    datasets.push({
-                        label: `${t2} (Real até aqui)`,
-                        data: [0, Math.round(pts2 * 0.33), Math.round(pts2 * 0.66), pts2, null],
-                        borderColor: '#3B82F6',
-                        backgroundColor: '#3B82F6',
-                        tension: 0.2,
-                        borderWidth: 3
-                    });
-                    datasets.push({
-                        label: `${t2} (Projetado IA)`,
-                        data: [null, null, null, pts2, pts2 + Math.round((d2['Titulo_%'] + d2['Liberta_%'] + 10) * 0.4)],
-                        borderColor: '#60A5FA',
-                        backgroundColor: '#60A5FA',
-                        borderDash: [5, 5],
-                        tension: 0.2,
-                        borderWidth: 2
-                    });
-                }
+                datasets.push(...gerarCurvasClube(t2, '#3B82F6', '#60A5FA')); // Azul
             }
 
             chartInstance.data.datasets = datasets;
