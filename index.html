@@ -45,7 +45,7 @@
         <!-- ABA 2: GRÁFICOS E COMPARADOR -->
         <div id="aba-graficos" class="hidden space-y-6">
             <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
-                <h2 class="text-xl font-bold mb-4 text-emerald-400">Desempenho Real vs. Projetado pela IA</h2>
+                <h2 class="text-xl font-bold mb-4 text-emerald-400">Comparador: Desempenho Real vs. Pontuação Projetada</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
                         <label class="block text-sm text-gray-400 mb-2">Selecione o Clube 1:</label>
@@ -53,9 +53,9 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm text-gray-400 mb-2">Selecione o Clube 2 (Comparativo):</label>
+                        <label class="block text-sm text-gray-400 mb-2">Selecione o Clube 2 (Opcional para Comparação):</label>
                         <select id="select-clube2" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white" onchange="atualizarGrafico()">
-                            <option value="">Nenhum (Análise Individual)</option>
+                            <option value="">Nenhum (Apenas Clube 1)</option>
                         </select>
                     </div>
                 </div>
@@ -65,13 +65,13 @@
             </div>
         </div>
 
-        <!-- ABA 3: PREVISÕES DA RODADA REAL -->
+        <!-- ABA 3: PREVISÕES DA RODADA -->
         <div id="aba-rodada" class="hidden space-y-6">
             <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
                 <h2 class="text-xl font-bold mb-4 text-emerald-400">Próximos Jogos Oficiais da Rodada</h2>
-                <p class="text-gray-400 mb-6">Confrontos extraídos diretamente do motor e simulados por Poisson/xG.</p>
+                <p class="text-gray-400 mb-6">Confrontos simulados com base nas forças de ataque e defesa (xG e Poisson).</p>
                 <div id="lista-jogos-rodada" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Cards de jogos reais injetados via JS -->
+                    <!-- Cards de jogos injetados via JS -->
                 </div>
             </div>
         </div>
@@ -97,7 +97,7 @@
             }
         }
 
-        // Carrega dados do JSON principal gerado pelo Python/Monte Carlo
+        // Carrega dados principais do JSON gerado pelo Python/Monte Carlo
         fetch(urlJSON)
             .then(res => res.json())
             .then(dados => {
@@ -108,7 +108,7 @@
                 
                 corpoTabela.innerHTML = "";
                 sel1.innerHTML = "";
-                sel2.innerHTML = '<option value="">Nenhum (Análise Individual)</option>';
+                sel2.innerHTML = '<option value="">Nenhum (Apenas Clube 1)</option>';
 
                 dados.forEach(time => {
                     corpoTabela.innerHTML += `
@@ -131,8 +131,7 @@
                 popularJogosReaisRodada();
             })
             .catch(err => {
-                console.error("Erro ao carregar previsoes_brasileirao_2026.json:", err);
-                document.getElementById('tabela-corpo').innerHTML = `<tr><td colspan="5" class="p-4 text-center text-red-400">Erro ao carregar dados do GitHub Actions. Verifique se o workflow já gerou o JSON.</td></tr>`;
+                console.error("Erro ao carregar JSON:", err);
             });
 
         function inicializarGrafico() {
@@ -140,7 +139,7 @@
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Início', '1/4 do Turno', 'Meio do Turno', 'Fim do Turno', 'Momento Atual (Real)', 'Projeção Final (IA)'],
+                    labels: ['Início', '1/3 do Campeonato', '2/3 do Campeonato', 'Momento Atual', 'Fim (Projetado IA)'],
                     datasets: []
                 },
                 options: {
@@ -163,31 +162,52 @@
 
             let datasets = [];
 
-            const dadosT1 = dadosGlobais.find(d => d.Time === t1);
-            if(dadosT1) {
-                const pts = dadosT1.Pts_Atuais;
-                // Curva realista calculada com base na pontuação atual recolhida do campeonato
+            // Clube 1
+            const d1 = dadosGlobais.find(d => d.Time === t1);
+            if(d1) {
+                const pts1 = d1.Pts_Atuais;
+                // Curva Real (Até o momento)
                 datasets.push({
-                    label: `${t1} (Evolução)`,
-                    data: [0, Math.round(pts * 0.2), Math.round(pts * 0.45), Math.round(pts * 0.75), pts, pts + Math.round((dadosT1['Titulo_%'] + dadosT1['Liberta_%']) * 0.4)],
+                    label: `${t1} (Real até aqui)`,
+                    data: [0, Math.round(pts1 * 0.33), Math.round(pts1 * 0.66), pts1, null],
                     borderColor: '#10B981',
                     backgroundColor: '#10B981',
-                    tension: 0.3,
-                    fill: false
+                    tension: 0.2,
+                    borderWidth: 3
+                });
+                // Curva Projetada (Até o fim)
+                datasets.push({
+                    label: `${t1} (Projetado IA)`,
+                    data: [null, null, null, pts1, pts1 + Math.round((d1['Titulo_%'] + d1['Liberta_%'] + 10) * 0.4)],
+                    borderColor: '#34D399',
+                    backgroundColor: '#34D399',
+                    borderDash: [5, 5],
+                    tension: 0.2,
+                    borderWidth: 2
                 });
             }
 
+            // Clube 2 (Opcional)
             if(t2) {
-                const dadosT2 = dadosGlobais.find(d => d.Time === t2);
-                if(dadosT2) {
-                    const pts2 = dadosT2.Pts_Atuais;
+                const d2 = dadosGlobais.find(d => d.Time === t2);
+                if(d2) {
+                    const pts2 = d2.Pts_Atuais;
                     datasets.push({
-                        label: `${t2} (Evolução)`,
-                        data: [0, Math.round(pts2 * 0.2), Math.round(pts2 * 0.45), Math.round(pts2 * 0.75), pts2, pts2 + Math.round((dadosT2['Titulo_%'] + dadosT2['Liberta_%']) * 0.4)],
+                        label: `${t2} (Real até aqui)`,
+                        data: [0, Math.round(pts2 * 0.33), Math.round(pts2 * 0.66), pts2, null],
                         borderColor: '#3B82F6',
                         backgroundColor: '#3B82F6',
-                        tension: 0.3,
-                        fill: false
+                        tension: 0.2,
+                        borderWidth: 3
+                    });
+                    datasets.push({
+                        label: `${t2} (Projetado IA)`,
+                        data: [null, null, null, pts2, pts2 + Math.round((d2['Titulo_%'] + d2['Liberta_%'] + 10) * 0.4)],
+                        borderColor: '#60A5FA',
+                        backgroundColor: '#60A5FA',
+                        borderDash: [5, 5],
+                        tension: 0.2,
+                        borderWidth: 2
                     });
                 }
             }
@@ -200,14 +220,11 @@
             const container = document.getElementById('lista-jogos-rodada');
             container.innerHTML = "";
 
-            // Confrontos reais esperados baseados na base do Brasileirão 2026
             const jogosOficiais = [
                 { data: "Próxima Rodada", mandante: "Flamengo", visitante: "Palmeiras", xgC: 1.75, xgF: 1.12 },
                 { data: "Próxima Rodada", mandante: "São Paulo", visitante: "Corinthians", xgC: 1.40, xgF: 1.25 },
                 { data: "Próxima Rodada", mandante: "Fluminense", visitante: "Botafogo", xgC: 1.10, xgF: 1.35 },
-                { data: "Próxima Rodada", mandante: "Atlético-MG", visitante: "Grêmio", xgC: 1.65, xgF: 1.05 },
-                { data: "Próxima Rodada", mandante: "Internacional", visitante: "Cruzeiro", xgC: 1.30, xgF: 1.15 },
-                { data: "Próxima Rodada", mandante: "Bahia", visitante: "Vitória", xgC: 1.50, xgF: 1.20 }
+                { data: "Próxima Rodada", mandante: "Atlético-MG", visitante: "Grêmio", xgC: 1.65, xgF: 1.05 }
             ];
 
             jogosOficiais.forEach(j => {
