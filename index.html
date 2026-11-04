@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Brasileirão 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center mb-2 text-emerald-400">Projeções Brasileirão 2026</h1>
+        <p class="text-center text-gray-400 mb-8">Atualizado diariamente pelo Motor de Monte Carlo (xG)</p>
+        
+        <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-gray-700">
+                    <tr>
+                        <th class="p-4">Time</th>
+                        <th class="p-4">Pontos Atuais</th>
+                        <th class="p-4 text-emerald-400">Título (%)</th>
+                        <th class="p-4 text-blue-400">Libertadores (%)</th>
+                        <th class="p-4 text-red-400">Z4 (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-corpo">
+                    <!-- O JavaScript vai injetar os times previstos aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // IMPORTANTE: Substitua SEU_USUARIO pelo seu nome de usuário exato do GitHub
+        const urlJSON = 'https://raw.githubusercontent.com/SEU_USUARIO/previsoes-brasileirao/main/previsoes_brasileirao_2026.json';
+
+        fetch(urlJSON)
+            .then(resposta => resposta.json())
+            .then(dados => {
+                const corpoTabela = document.getElementById('tabela-corpo');
+                
+                dados.forEach(time => {
+                    const linha = `
+                        <tr class="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+                            <td class="p-4 font-semibold">${time.Time}</td>
+                            <td class="p-4">${time.Pts_Atuais}</td>
+                            <td class="p-4 font-bold text-emerald-400">${time['Titulo_%']}%</td>
+                            <td class="p-4 font-bold text-blue-400">${time['Liberta_%']}%</td>
+                            <td class="p-4 font-bold text-red-400">${time['Rebaixamento_%']}%</td>
+                        </tr>
+                    `;
+                    corpoTabela.innerHTML += linha;
+                });
+            })
+            .catch(erro => console.error('Erro ao carregar os dados da IA:', erro));
+    </script>
+</body>
+</html>

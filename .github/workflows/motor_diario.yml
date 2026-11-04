@@ -20,7 +20,7 @@ jobs:
     - name: Ligar o motor Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: '3.11'
 
     - name: Instalar o cérebro matemático
       run: |
