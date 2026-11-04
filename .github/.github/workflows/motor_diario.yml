@@ -1,0 +1,41 @@
+name: Atualizador do Brasileirao
+
+on:
+  schedule:
+    # Roda todos os dias às 04:00 UTC (01:00 da madrugada em Itabuna)
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Permite que você clique em um botão para rodar agora mesmo
+
+permissions:
+  contents: write # Dá permissão para o robô salvar o JSON novo
+
+jobs:
+  rodar-simulacao:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Baixar o código do repositório
+      uses: actions/checkout@v4
+
+    - name: Ligar o motor Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+
+    - name: Instalar o cérebro matemático
+      run: |
+        pip install pandas scikit-learn scipy requests
+
+    - name: Passo 1 - Atualizar a realidade (Football-Data)
+      run: python atualizar_dados_livre.py
+
+    - name: Passo 2 - Rodar IA e Monte Carlo
+      run: python simulacao_monte_carlo.py
+
+    - name: Passo 3 - Salvar os resultados na nuvem
+      run: |
+        git config --global user.name "Robo de Estatisticas"
+        git config --global user.email "robo@projeto.com"
+        git add previsoes_brasileirao_2026.json jogos_limpos_para_ia.csv jogos_pendentes_2026.csv
+        git commit -m "🤖 Atualização Diária de Probabilidades" || echo "Nenhuma mudança nos dados hoje"
+        git push
