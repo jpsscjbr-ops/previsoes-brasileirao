@@ -2,14 +2,14 @@
     {
         "Time":"Flamengo RJ",
         "Pts_Atuais":73,
-        "Titulo_%":90.3,
+        "Titulo_%":91.3,
         "Liberta_%":100.0,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Palmeiras",
         "Pts_Atuais":70,
-        "Titulo_%":9.7,
+        "Titulo_%":8.7,
         "Liberta_%":100.0,
         "Rebaixamento_%":0.0
     },
@@ -17,28 +17,28 @@
         "Time":"Cruzeiro",
         "Pts_Atuais":57,
         "Titulo_%":0.0,
-        "Liberta_%":95.5,
+        "Liberta_%":96.4,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Athletico-PR",
         "Pts_Atuais":54,
         "Titulo_%":0.0,
-        "Liberta_%":35.3,
+        "Liberta_%":36.1,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Fluminense",
         "Pts_Atuais":54,
         "Titulo_%":0.0,
-        "Liberta_%":30.7,
+        "Liberta_%":30.6,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Bahia",
         "Pts_Atuais":53,
         "Titulo_%":0.0,
-        "Liberta_%":36.6,
+        "Liberta_%":35.1,
         "Rebaixamento_%":0.0
     },
     {
@@ -66,7 +66,7 @@
         "Time":"Sao Paulo",
         "Pts_Atuais":43,
         "Titulo_%":0.0,
-        "Liberta_%":0.2,
+        "Liberta_%":0.1,
         "Rebaixamento_%":0.0
     },
     {
@@ -74,49 +74,49 @@
         "Pts_Atuais":42,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":6.1
+        "Rebaixamento_%":6.4
     },
     {
         "Time":"Botafogo RJ",
         "Pts_Atuais":39,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":1.1
+        "Rebaixamento_%":1.4
     },
     {
         "Time":"Vasco",
         "Pts_Atuais":38,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":10.5
+        "Rebaixamento_%":10.6
     },
     {
         "Time":"Vitoria",
         "Pts_Atuais":38,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":29.5
+        "Rebaixamento_%":29.8
     },
     {
         "Time":"Gremio",
         "Pts_Atuais":37,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":53.8
+        "Rebaixamento_%":54.3
     },
     {
         "Time":"Mirassol",
         "Pts_Atuais":37,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":11.8
+        "Rebaixamento_%":11.3
     },
     {
         "Time":"Corinthians",
         "Pts_Atuais":36,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":59.5
+        "Rebaixamento_%":58.6
     },
     {
         "Time":"Internacional",
@@ -130,7 +130,7 @@
         "Pts_Atuais":29,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":99.7
+        "Rebaixamento_%":99.6
     },
     {
         "Time":"Chapecoense-SC",
