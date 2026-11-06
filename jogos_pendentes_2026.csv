@@ -1,47 +1,39 @@
 mandante,visitante
 Athletico-PR,Remo
 Athletico-PR,Sao Paulo
-Athletico-PR,Vasco
 Atletico-MG,Corinthians
 Atletico-MG,Vasco
 Bahia,Atletico-MG
 Bahia,Coritiba
-Botafogo RJ,Atletico-MG
 Botafogo RJ,Bahia
 Botafogo RJ,Sao Paulo
 Bragantino,Fluminense
 Bragantino,Vasco
 Chapecoense-SC,Cruzeiro
-Chapecoense-SC,Mirassol
 Chapecoense-SC,Palmeiras
 Chapecoense-SC,Vasco
 Corinthians,Botafogo RJ
 Corinthians,Gremio
 Coritiba,Flamengo RJ
 Coritiba,Santos
-Cruzeiro,Bahia
 Cruzeiro,Internacional
 Cruzeiro,Palmeiras
 Flamengo RJ,Athletico-PR
 Flamengo RJ,Chapecoense-SC
-Flamengo RJ,Gremio
 Fluminense,Cruzeiro
 Fluminense,Mirassol
 Gremio,Bahia
 Gremio,Mirassol
 Internacional,Bragantino
-Internacional,Coritiba
 Internacional,Vitoria
 Mirassol,Athletico-PR
 Mirassol,Atletico-MG
 Palmeiras,Coritiba
 Palmeiras,Flamengo RJ
-Palmeiras,Remo
 Remo,Chapecoense-SC
 Remo,Corinthians
 Santos,Botafogo RJ
 Santos,Gremio
-Sao Paulo,Corinthians
 Sao Paulo,Fluminense
 Sao Paulo,Remo
 Vasco,Internacional
