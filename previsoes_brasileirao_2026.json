@@ -2,14 +2,14 @@
     {
         "Time":"Flamengo RJ",
         "Pts_Atuais":76,
-        "Titulo_%":93.7,
+        "Titulo_%":93.8,
         "Liberta_%":100.0,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Palmeiras",
         "Pts_Atuais":73,
-        "Titulo_%":6.3,
+        "Titulo_%":6.2,
         "Liberta_%":100.0,
         "Rebaixamento_%":0.0
     },
@@ -17,35 +17,35 @@
         "Time":"Cruzeiro",
         "Pts_Atuais":60,
         "Titulo_%":0.0,
-        "Liberta_%":99.2,
+        "Liberta_%":99.0,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Athletico-PR",
         "Pts_Atuais":54,
         "Titulo_%":0.0,
-        "Liberta_%":13.2,
+        "Liberta_%":13.8,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Fluminense",
         "Pts_Atuais":54,
         "Titulo_%":0.0,
-        "Liberta_%":38.6,
+        "Liberta_%":37.7,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Bahia",
         "Pts_Atuais":53,
         "Titulo_%":0.0,
-        "Liberta_%":46.4,
+        "Liberta_%":46.6,
         "Rebaixamento_%":0.0
     },
     {
         "Time":"Atletico-MG",
         "Pts_Atuais":50,
         "Titulo_%":0.0,
-        "Liberta_%":2.6,
+        "Liberta_%":2.7,
         "Rebaixamento_%":0.0
     },
     {
@@ -59,7 +59,7 @@
         "Time":"Santos",
         "Pts_Atuais":47,
         "Titulo_%":0.0,
-        "Liberta_%":0.1,
+        "Liberta_%":0.2,
         "Rebaixamento_%":0.0
     },
     {
@@ -81,7 +81,7 @@
         "Pts_Atuais":42,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":15.5
+        "Rebaixamento_%":15.8
     },
     {
         "Time":"Vasco",
@@ -95,35 +95,35 @@
         "Pts_Atuais":40,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":7.4
+        "Rebaixamento_%":8.1
     },
     {
         "Time":"Internacional",
         "Pts_Atuais":38,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":16.9
+        "Rebaixamento_%":16.1
     },
     {
         "Time":"Vitoria",
         "Pts_Atuais":38,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":33.0
+        "Rebaixamento_%":32.7
     },
     {
         "Time":"Corinthians",
         "Pts_Atuais":37,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":48.8
+        "Rebaixamento_%":48.0
     },
     {
         "Time":"Gremio",
         "Pts_Atuais":37,
         "Titulo_%":0.0,
         "Liberta_%":0.0,
-        "Rebaixamento_%":75.8
+        "Rebaixamento_%":76.8
     },
     {
         "Time":"Remo",
